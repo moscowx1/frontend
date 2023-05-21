@@ -3,9 +3,14 @@ module.exports = {
     'airbnb-typescript',
     'airbnb/hooks',
     'plugin:@typescript-eslint/recommended',
-    'plugin:prettier/recommended'
+    'plugin:prettier/recommended',
+    'pligin:effector/react'
   ],
-  plugins: ['react', '@typescript-eslint'],
+  plugins: [
+    'react',
+    '@typescript-eslint',
+    'effector'
+  ],
   env: {
     browser: true,
     es2022: true,
