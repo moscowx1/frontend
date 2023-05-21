@@ -51,9 +51,12 @@ const AuthForm = () => {
     e.preventDefault();
     submit();
   }
+  const a = process.env.M;
 
   return (
     <Container component="main" maxWidth="xs">
+      <h1>{a}</h1>
+      <h1>{process.env.REACT_APP_NAME}</h1>
       <CssBaseline />
       <Box
         sx={{
@@ -68,7 +71,7 @@ const AuthForm = () => {
         </Typography>
         <Box
           component="form"
-          noValidate 
+          noValidate
           sx={{ mt: 1 }}
           onSubmit={submitHandler}>
           <TextField
