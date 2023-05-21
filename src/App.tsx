@@ -1,4 +1,4 @@
-import AuthForm from "./components/AuthForm";
+import AuthForm from "./ui/AuthForm";
 
 function App() {
   return (
