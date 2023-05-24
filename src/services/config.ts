@@ -1,58 +1,17 @@
-import { Either, left, right } from 'fp-ts/Either';
+import { createStore } from 'effector';
+import zod from 'zod';
 
-const appMode = ['Debug', 'Production'] as const;
-type AppMode = typeof appMode[number];
+export const appMode = zod.enum(['Debug', 'Production'] as const);
+export type AppMode = zod.infer<typeof appMode>;
 
-export type Config = {
-  baseUrl: URL;
-  appMode: AppMode;
+export const config = zod.object({
+  baseUrl: zod.string().url(),
+  appMode: appMode
+});
+export type Config = zod.infer<typeof config>;
+
+export const $configuration = createStore(() => {
+  console.log(process.env);
+  return config.parse(process.env)
 }
-
-export type ParseError = {
-  field: string;
-  message: string;
-}
-
-type StringLiteral<T> = T extends `${string & T}` ? T : never;
-
-const test = <T>(value: string): Either<string, StringLiteral<T>> => {
-  return (null as any);
-}
-
-const config: Config | null = null;
-
-
-const url = (value: string, errMsg?: string): Either<string, URL> => {
-  try {
-    return right(new URL(value));
-  } catch (e: unknown) {
-    if (errMsg) {
-      return left(errMsg);
-    }
-
-    if (e instanceof Error) {
-      return left(`${e.name} -- ${e.message}`);
-    }
-
-    return left('error creating url');
-  }
-}
-
-type Kek = string;
-
-function readConfigFromEnv(rawConfig: any): Config {
-  const {
-    BASE_URL = undefined,
-    APP_MODE = undefined,
-  } = rawConfig;
-
-  return (null as any);
-}
-
-export function configuration() {
-  if (config !== null) {
-    return config;
-  }
-
-
-}
+);

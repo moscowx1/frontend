@@ -1,5 +1,17 @@
-import { User } from "../domain/user"
+import { User } from "../domain/user";
+import { $configuration } from "./config";
 
-export function login(user: string, password: string): Promise<User> {
-  return (null as any);
+export async function login(user: string, password: string): Promise<User> {
+  const { baseUrl } = $configuration.getState();
+  const res = await fetch(`${baseUrl}/auth/sign-in`, {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-type': 'application/json'
+    }
+  })
+    .then((m) => m.json())
+    .then((v) => v as User);
+
+  return res;
 }
