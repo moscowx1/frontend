@@ -1,35 +1,44 @@
-import { Box, Button, Container, CssBaseline, Grid, Link, TextField, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Grid,
+  Link,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { useStore } from "effector-react";
-import { createForm, useForm } from 'effector-forms';
+import { createForm, useForm } from "effector-forms";
 import { createEffect, forward } from "effector";
 import React from "react";
+import { $configuration } from "../services/config";
 
 export const loginForm = createForm({
-  validateOn: ['submit', 'blur'],
+  validateOn: ["submit", "blur"],
   fields: {
     login: {
-      init: '',
+      init: "",
       rules: [
         {
-          name: 'minLength',
+          name: "minLength",
           validator: (value: string) => {
             return value.length < 5;
-          }
-        }
-      ]
+          },
+        },
+      ],
     },
     password: {
-      init: '',
+      init: "",
       rules: [
         {
-          name: 'minLength',
-          validator: (value: string) =>
-            value.length > 5
-        }
-      ]
-    }
-  }
-})
+          name: "minLength",
+          validator: (value: string) => value.length > 5,
+        },
+      ],
+    },
+  },
+});
 
 export const loginFx = createEffect(() => {
   console.log(12);
@@ -39,7 +48,7 @@ export const resetFx = createEffect();
 
 forward({
   from: loginForm.submit,
-  to: loginFx
+  to: loginFx,
 });
 
 const AuthForm = () => {
@@ -50,17 +59,22 @@ const AuthForm = () => {
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     submit();
-  }
+  };
+  const v = $configuration.getState()();
 
   return (
     <Container component="main" maxWidth="xs">
+      <h1>{v.appMode}</h1>
+      <h1>{v.baseUrl}</h1>
+      <h1>{process.env.RM}</h1>
+      <h1>{process.env.REACT_APP_VERSION}</h1>
       <CssBaseline />
       <Box
         sx={{
           marginTop: 8,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
         }}
       >
         <Typography component="h1" variant="h5">
@@ -70,7 +84,8 @@ const AuthForm = () => {
           component="form"
           noValidate
           sx={{ mt: 1 }}
-          onSubmit={submitHandler}>
+          onSubmit={submitHandler}
+        >
           <TextField
             margin="normal"
             fullWidth
@@ -113,7 +128,7 @@ const AuthForm = () => {
         </Box>
       </Box>
     </Container>
-  )
-}
+  );
+};
 
 export default AuthForm;

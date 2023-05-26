@@ -1,17 +1,24 @@
-import { createStore } from 'effector';
-import zod from 'zod';
+import zod from "zod";
+import { createStore } from "effector";
 
-export const appMode = zod.enum(['Debug', 'Production'] as const);
+const _appMode = ["Debug", "Production"] as const;
+export const appMode = zod.enum(_appMode);
 export type AppMode = zod.infer<typeof appMode>;
 
 export const config = zod.object({
   baseUrl: zod.string().url(),
-  appMode: appMode
+  appMode: appMode,
 });
 export type Config = zod.infer<typeof config>;
 
 export const $configuration = createStore(() => {
-  console.log(process.env);
-  return config.parse(process.env)
-}
-);
+  const values = process.env;
+  try {
+    return config.parse({
+      baseUrl: values.REACT_APP_BASE_URL,
+      appMode: values.REACT_APP_MODE,
+    });
+  } catch {
+    throw new Error("invalid dotenv configuration");
+  }
+});
