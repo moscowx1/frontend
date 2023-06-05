@@ -12,7 +12,8 @@ import { useStore } from "effector-react";
 import { createForm, useForm } from "effector-forms";
 import { createEffect, forward } from "effector";
 import React from "react";
-import { $configuration } from "../services/config";
+import * as Auth from "../services/auth";
+import * as E from "fp-ts/Either";
 
 export const loginForm = createForm({
   validateOn: ["submit", "blur"],
@@ -23,7 +24,7 @@ export const loginForm = createForm({
         {
           name: "minLength",
           validator: (value: string) => {
-            return value.length < 5;
+            return value.length > 5;
           },
         },
       ],
@@ -52,22 +53,25 @@ forward({
 });
 
 const AuthForm = () => {
-  const { fields, submit, eachValid } = useForm(loginForm);
+  const { fields, submit, eachValid, isTouched } = useForm(loginForm);
   const pending = useStore(loginFx.pending);
   console.log(eachValid);
 
-  const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitHandler = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     submit();
+    if (!isTouched || !eachValid) return;
+
+    const login = fields.login.value;
+    const password = fields.password.value;
+    submit();
+    const res = await Auth.login(login, password)();
+    console.log(res);
+    //submit();
   };
-  const v = $configuration.getState()();
 
   return (
     <Container component="main" maxWidth="xs">
-      <h1>{v.appMode}</h1>
-      <h1>{v.baseUrl}</h1>
-      <h1>{process.env.RM}</h1>
-      <h1>{process.env.REACT_APP_VERSION}</h1>
       <CssBaseline />
       <Box
         sx={{
