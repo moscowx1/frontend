@@ -25,7 +25,7 @@ const loginForm = createForm({
       rules: [rules.minLength(5)],
     },
   },
-  validateOn: ["change", "submit"],
+  validateOn: ["change", "submit", "blur"],
 });
 
 forward({
@@ -33,11 +33,10 @@ forward({
   to: loginFx,
 });
 
-const AuthForm = () => {
+const LoginForm = () => {
   const { fields, submit, eachValid, hasError } = useForm(loginForm);
   const pending = useStore(loginFx.pending);
   const error = useStore($currentUserError);
-  console.log(error);
 
   const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -95,4 +94,4 @@ const AuthForm = () => {
   );
 };
 
-export default AuthForm;
+export default LoginForm;

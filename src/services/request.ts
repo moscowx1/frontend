@@ -1,12 +1,12 @@
-import { $configuration } from "./config";
+import { $config } from "../models/app";
 
 export type Method = "GET" | "POST";
 
 export const requestBase =
   (path: string, method: Method) =>
   async <TBody>(body: TBody): Promise<Response> => {
-    const { baseUrl } = $configuration.getState()();
-    return await fetch(`${baseUrl}/${path}`, {
+    const { baseUrl, scheme } = $config.getState();
+    return await fetch(`${scheme}://${baseUrl}/${path}`, {
       method,
       headers: {
         Accept: "application/json",
