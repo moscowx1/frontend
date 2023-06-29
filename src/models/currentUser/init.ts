@@ -1,4 +1,10 @@
-import { $currentUser, $currentUserError, loginFx, logout } from ".";
+import {
+  $currentUser,
+  $currentUserError,
+  loginFx,
+  logout,
+  registerFx,
+} from ".";
 import { requestBase } from "../../services/request";
 
 loginFx.use(async (data) => {
@@ -11,9 +17,19 @@ loginFx.use(async (data) => {
   });
 });
 
+registerFx.use(async (data) => {
+  return requestBase(
+    "auth/register",
+    "POST"
+  )(data).then((r) => {
+    if (!r.ok) throw new Error("not success status code");
+    return r.json();
+  });
+});
+
 $currentUserError
   .reset(logout)
-  .on(loginFx.failData, (_, e) => {
+  .on([loginFx.failData, registerFx.failData], (_, e) => {
     console.error(e);
     return e;
   });
